@@ -1,4 +1,4 @@
-# Prisoner Riddle
+# Prisoner's Riddle
 Simulate the [prisoner's riddle](https://www.youtube.com/watch?v=iSNsgj1OCLA).
 
 ## Run the Simulation

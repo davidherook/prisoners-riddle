@@ -47,7 +47,7 @@ def simulate(n_rounds, n_prisoners):
 		round_num.append(r)
 		prisoners_successful.append(num_prisoners_successful)
 	return pd.DataFrame({
-		'round': round_num, 
+		'round': round_num,
 		'prisoners_successful': prisoners_successful})
 
 def save_results(df_results):
@@ -71,7 +71,6 @@ def print_summary(df_results, rounds, prisoners):
 	for k,v in results.items():
 		print(k, v)
 
-
 if __name__ == '__main__':
 	header = '\n' + '*' * 50 + '\n'
 	parser = argparse.ArgumentParser()
@@ -87,8 +86,4 @@ if __name__ == '__main__':
 	save_results(df_results)
 	print_summary(df_results, rounds, prisoners)
 	print(header)
-
-
-
-
 
