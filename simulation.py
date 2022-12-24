@@ -17,37 +17,48 @@ def create_board(prisoners):
 
 def single_prisoner_attempt(board, prisoner_id):
 	success = False
+	path_taken = []
 	attempts = int(len(board) / 2)
 	box_selected = prisoner_id
 	for a in range(attempts):
 		selection = board[box_selected]
 		#print(f"Prisoner: {prisoner_id}; Attempt: {a}; Box Selection: {box_selected}; Result: {selection}")
+		path_taken.append(box_selected)
 		if selection == prisoner_id:
 			success = True
 			break
 		box_selected = selection
-	return success
+	return success, path_taken
 
 def simulate(n_rounds, n_prisoners):
 	prisoners = list(range(1, n_prisoners + 1))
 	round_num = []
 	prisoners_successful = []
+	all_paths_taken = []
 	for r in range(n_rounds):
 		board = create_board(n_prisoners)
 		single_round_result = []
 		for prisoner in prisoners:
-			result = single_prisoner_attempt(board, prisoner)
+			result, path_taken = single_prisoner_attempt(board, prisoner)
 			single_round_result.append(result)
+			all_paths_taken.append([r, prisoner, result, path_taken, len(path_taken)])
 		num_prisoners_successful = sum(single_round_result)
 		round_num.append(r)
 		prisoners_successful.append(num_prisoners_successful)
-	return pd.DataFrame({
+	df_results = pd.DataFrame({
 		'round': round_num,
 		'prisoners_successful': prisoners_successful})
+	df_paths_taken = pd.DataFrame(
+		all_paths_taken,
+		columns = ['round', 'prisoner', 'success', 'path_taken', 'path_length'])
+	return df_results, df_paths_taken
 
-def save_results(df_results):
+def save_results(df_results, save_to = None):
 	dir_out = 'results'
-	path = os.path.join(dir_out, f"results_{RUN_TIME}.csv")
+	if save_to is not None:
+		path = os.path.join(dir_out, f"{save_to}_{RUN_TIME}.csv")
+	else:
+		path = os.path.join(dir_out, f"results_{RUN_TIME}.csv")
 	if not os.path.isdir(dir_out):
 		os.mkdir(dir_out)
 	df_results.to_csv(path, index = False)
@@ -77,8 +88,9 @@ if __name__ == '__main__':
 
 	print(header)
 	print(f"Simulating {rounds} rounds with {prisoners} prisoners each round...")
-	df_results = simulate(rounds, prisoners)
+	df_results, paths_taken = simulate(rounds, prisoners)
 	save_results(df_results)
+	save_results(paths_taken, save_to = 'paths_taken')
 	print_summary(df_results, rounds, prisoners)
 	print(header)
 
