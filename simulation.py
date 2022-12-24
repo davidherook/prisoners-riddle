@@ -15,11 +15,6 @@ def create_board(prisoners):
 		board[b] = papers[b - 1]
 	return board
 
-def is_correct(selection, prisoner_id):
-	if selection == prisoner_id:
-		return True
-	return False
-
 def single_prisoner_attempt(board, prisoner_id):
 	success = False
 	attempts = int(len(board) / 2)
@@ -27,7 +22,7 @@ def single_prisoner_attempt(board, prisoner_id):
 	for a in range(attempts):
 		selection = board[box_selected]
 		#print(f"Prisoner: {prisoner_id}; Attempt: {a}; Box Selection: {box_selected}; Result: {selection}")
-		if is_correct(selection, prisoner_id):
+		if selection == prisoner_id:
 			success = True
 			break
 		box_selected = selection
